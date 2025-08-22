@@ -1,64 +1,78 @@
 import React, { useState } from "react";
-import MovieCard from "../components/MovieCard";
 
-function Home() {
+export default function Home({ onSelectMovie }) {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSearch = async () => {
-    if (!query) return;
+  const API_KEY = "29652ce9"; // your activated API key
 
+  const searchMovies = async () => {
+    if (!query.trim()) return;
+
+    setLoading(true);
+    setError("");
     try {
-      const response = await fetch(
-        `https://www.omdbapi.com/?s=${query}&apikey=YOUR_API_KEY`
+      const res = await fetch(
+        `https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
       );
-      const data = await response.json();
-      if (data.Search) {
+      const data = await res.json();
+
+      if (data.Response === "True") {
         setMovies(data.Search);
       } else {
+        setError(data.Error || "No movies found.");
         setMovies([]);
       }
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      setMovies([]);
+    } catch (err) {
+      setError("Something went wrong while fetching data.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-100 dark:bg-gray-900">
-      <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-6">
-        🎬 Movie Database App
-      </h1>
-
-      <div className="flex gap-2 mb-6">
+    <div className="text-center">
+      <div className="flex justify-center mb-6">
         <input
           type="text"
-          placeholder="Search movies..."
-          className="flex-1 p-2 rounded border border-gray-300 dark:border-gray-700"
+          placeholder="Search for a movie..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          className="px-4 py-2 rounded-l-lg text-black w-64"
         />
         <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={searchMovies}
+          className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-r-lg"
         >
           Search
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)
-        ) : (
-          <p className="text-gray-700 dark:text-gray-300">
-            No movies found. Try searching!
-          </p>
-        )}
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-red-400">{error}</p>}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {movies.map((movie) => (
+          <div
+            key={movie.imdbID}
+            onClick={() => onSelectMovie(movie.imdbID)}
+            className="cursor-pointer bg-gray-800 rounded-lg shadow-md overflow-hidden hover:scale-105 transform transition duration-200"
+          >
+            <img
+              src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300"}
+              alt={movie.Title}
+              className="w-full h-64 object-cover"
+            />
+            <div className="p-2">
+              <h2 className="font-semibold text-lg">{movie.Title}</h2>
+              <p className="text-sm text-gray-400">{movie.Year}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
-export default Home;
-
 
