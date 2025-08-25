@@ -1,20 +1,24 @@
-import React, { useState } from "react";
-<<<<<<< HEAD
+import React, { useState, useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import MovieCard from "./components/MovieCard";
 import MovieDetail from "./components/MovieDetail";
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedMovieID, setSelectedMovieID] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Set the browser tab title
+  useEffect(() => {
+    document.title = "Movie Database App";
+  }, []);
 
   // Search for multiple movies
   const handleSearch = async (query) => {
     setLoading(true);
     setError("");
-    setSelectedMovie(null);
+    setSelectedMovieID(null);
     setSearchResults([]);
 
     try {
@@ -35,38 +39,20 @@ function App() {
     }
   };
 
-  // Fetch details when a movie card is clicked
-  const handleMovieClick = async (imdbID) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(
-        `https://www.omdbapi.com/?i=${imdbID}&apikey=29652ce9`
-      );
-      const data = await response.json();
-
-      if (data.Response === "True") {
-        setSelectedMovie(data);
-        setSearchResults([]); // hide search list
-      } else {
-        setError("Details not found.");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  // Select a movie by its IMDb ID
+  const handleMovieClick = (imdbID) => {
+    setSelectedMovieID(imdbID);
+    setSearchResults([]); // hide search results
   };
 
   // Back button handler
   const handleBack = () => {
-    setSelectedMovie(null);
+    setSelectedMovieID(null);
     setError("");
   };
 
   return (
-    <div className="bg-black min-h-screen text-white p-4">
+    <div className="bg-black text-white p-4 flex flex-col min-h-screen">
       <h1 className="text-4xl font-bold text-center pt-4">Movie Database</h1>
 
       <SearchBar onSearch={handleSearch} />
@@ -75,8 +61,8 @@ function App() {
       {error && <p className="text-center mt-6 text-red-500">{error}</p>}
 
       {/* Movie List */}
-      {!selectedMovie && searchResults.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6">
+      {!selectedMovieID && searchResults.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 flex-1">
           {searchResults.map((movie) => (
             <MovieCard
               key={movie.imdbID}
@@ -88,39 +74,18 @@ function App() {
       )}
 
       {/* Movie Details */}
-      {selectedMovie && (
-        <MovieDetail movie={selectedMovie} onBack={handleBack} />
-=======
-import Home from "./pages/Home";
-import MovieDetail from "./components/MovieDetail"; // matches your file name
-
-export default function App() {
-  const [selectedMovie, setSelectedMovie] = useState(null);
-
-  return (
-    <div className="bg-black min-h-screen text-white p-4">
-      <h1 className="text-3xl text-center font-bold mb-6">🎬 Movie Database</h1>
-      {!selectedMovie ? (
-        <Home onSelectMovie={(id) => setSelectedMovie(id)} />
-      ) : (
-        <MovieDetail imdbID={selectedMovie} onBack={() => setSelectedMovie(null)} />
->>>>>>> 6b103e86a9f0d1ae6d446ab6ae88b3009270a323
+      {selectedMovieID && (
+        <MovieDetail imdbID={selectedMovieID} onBack={handleBack} />
       )}
+
+      {/* Footer */}
+      <footer className="text-center mt-auto py-4 text-white">
+        Developed by Eliud Mathu
+      </footer>
     </div>
   );
 }
 
-<<<<<<< HEAD
 export default App;
 
-
-
-
-
-
-
-
-
-=======
->>>>>>> 6b103e86a9f0d1ae6d446ab6ae88b3009270a323
 
