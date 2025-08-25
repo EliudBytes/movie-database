@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import SearchBar from "./components/SearchBar";
 import MovieCard from "./components/MovieCard";
 import MovieDetail from "./components/MovieDetail";
@@ -89,11 +90,27 @@ function App() {
       {/* Movie Details */}
       {selectedMovie && (
         <MovieDetail movie={selectedMovie} onBack={handleBack} />
+=======
+import Home from "./pages/Home";
+import MovieDetail from "./components/MovieDetail"; // matches your file name
+
+export default function App() {
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  return (
+    <div className="bg-black min-h-screen text-white p-4">
+      <h1 className="text-3xl text-center font-bold mb-6">🎬 Movie Database</h1>
+      {!selectedMovie ? (
+        <Home onSelectMovie={(id) => setSelectedMovie(id)} />
+      ) : (
+        <MovieDetail imdbID={selectedMovie} onBack={() => setSelectedMovie(null)} />
+>>>>>>> 6b103e86a9f0d1ae6d446ab6ae88b3009270a323
       )}
     </div>
   );
 }
 
+<<<<<<< HEAD
 export default App;
 
 
@@ -104,4 +121,6 @@ export default App;
 
 
 
+=======
+>>>>>>> 6b103e86a9f0d1ae6d446ab6ae88b3009270a323
 
