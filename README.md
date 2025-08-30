@@ -5,7 +5,7 @@ A **React + Tailwind CSS** application that allows users to search for movies an
 =======
 # 🎬 Movie Database App
 
-A simple and responsive React application to search and view movies. Built with **React**, **Vite**, and **Tailwind CSS**.
+A simple and responsive React application to search and view movies. Built with **React** and **Tailwind CSS**.
 >>>>>>> 6b103e86a9f0d1ae6d446ab6ae88b3009270a323
 
 ---
